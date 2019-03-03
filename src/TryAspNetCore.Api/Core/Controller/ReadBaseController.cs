@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,11 +17,13 @@ namespace TryAspNetCore.Core
         where TContext : BaseContext
         where T : BaseEntity, new()
     {
-        private readonly IReadRepository<TContext, T> _readRepository;
         protected readonly ILogger _logger;
+        private readonly IMapper _mapper;
+        private readonly IReadRepository<TContext, T> _readRepository;
 
-        public ReadBaseController(IReadRepository<TContext, T> readRepository, ILoggerFactory loggerFactory)
+        public ReadBaseController(IReadRepository<TContext, T> readRepository, ILoggerFactory loggerFactory, IMapper mapper)
         {
+            _mapper = mapper;
             _readRepository = readRepository;
             _logger = loggerFactory.CreateLogger(this.GetType().Name);
         }

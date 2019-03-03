@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.AspNetCore;
 using TryAspNetCore.Api.Core.Repositories;
+using AutoMapper;
 
 namespace TryAspNetCore.Api
 {
@@ -54,6 +55,8 @@ namespace TryAspNetCore.Api
                 // We want to validate with ValidationFilter which we customize
                 options.SuppressModelStateInvalidFilter = true;
             });
+
+            services.AddAutoMapper();
 
             services.AddMvc(options =>
                 {

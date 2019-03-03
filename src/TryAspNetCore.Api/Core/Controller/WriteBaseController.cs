@@ -1,3 +1,5 @@
+using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,28 +13,25 @@ namespace TryAspNetCore.Core
         where TContext : BaseContext
         where T : BaseEntity, new()
     {
+        private readonly IMapper _mapper;
         private readonly IWriteRepository<TContext, T> _writeRepository;
 
-        public WriteBaseController(IWriteRepository<TContext, T> writeRepository, ILoggerFactory loggerFactory)
-            : base(writeRepository, loggerFactory)
+        public WriteBaseController(IWriteRepository<TContext, T> writeRepository, ILoggerFactory loggerFactory, IMapper mapper)
+            : base(writeRepository, loggerFactory, mapper)
         {
+            _mapper = mapper;
             _writeRepository = writeRepository;
         }
 
         [HttpPost]
-        public ActionResult<T> Post([FromBody]TDto entity)
+        public ActionResult<T> Post([FromBody]TDto record)
         {
             _logger.LogInformation("Post log");
-            //Use automapper
-            // var entity = new Event
-            // {
-            //     Id = Guid.NewGuid(),
-            //     Title = eventInfo.Title
-            // };
-            // _writeRepository.Add(entity);
+            var entity = _mapper.Map<T>(record);
+            entity.Id = Guid.NewGuid();
+            _writeRepository.Add(entity);
 
-            return CreatedAtAction("Get", new { id = 1 }, entity);
-            // return CreatedAtAction("Get", new { id = entity.Id }, entity);
+            return CreatedAtAction("Get", new { id = entity.Id }, entity);
         }
     }
 }
