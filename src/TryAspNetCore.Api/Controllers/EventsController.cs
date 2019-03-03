@@ -7,53 +7,50 @@ using TryAspNetCore.Api.Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TryAspNetCore.Core;
 
 namespace TryAspNetCore.Api.Controllers
 {
-    [Authorize]
-    [ApiController]
-    [Route("/api/[controller]")]
-    public class EventsController : ControllerBase
+    public class EventsController : WriteBaseController<EventContext, Event, EventDto>
     {
-        private readonly ILogger<EventsController> _logger;
         private readonly IWriteRepository<EventContext, Event> _repository;
-        public EventsController(ILogger<EventsController> logger, IWriteRepository<EventContext, Event> repository)
+        public EventsController(IWriteRepository<EventContext, Event> repository, ILoggerFactory loggerFactory)
+            : base(repository, loggerFactory)
         {
-            _logger = logger;
             _repository = repository;
         }
 
-        [HttpGet]
-        public ActionResult<List<Event>> Get()
-        {
-            _logger.LogInformation("Event Get log, 1");
-            Serilog.Log.Information("Event Get log, 2");
-            var events = _repository.FindBy(e => true);
-            return new JsonResult(events);
-        }
+        // [HttpGet]
+        // public ActionResult<List<Event>> Get()
+        // {
+        //     _logger.LogInformation("Event Get log, 1");
+        //     Serilog.Log.Information("Event Get log, 2");
+        //     var events = _repository.FindBy(e => true);
+        //     return new JsonResult(events);
+        // }
 
-        [HttpGet("{id}")]
-        public ActionResult<Event> Get(Guid id)
-        {
-            var entity = _repository.Get(id);
-            if (entity == null)
-                return NotFound(null);
+        // [HttpGet("{id}")]
+        // public ActionResult<Event> Get(Guid id)
+        // {
+        //     var entity = _repository.Get(id);
+        //     if (entity == null)
+        //         return NotFound(null);
 
-            return Ok(entity);
-        }
+        //     return Ok(entity);
+        // }
 
-        [HttpPost]
-        public ActionResult<Event> Post([FromBody]RegisterEventDto eventInfo)
-        {
-            var entity = new Event
-            {
-                Id = Guid.NewGuid(),
-                Title = eventInfo.Title
-            };
-            _repository.Add(entity);
+        // [HttpPost]
+        // public ActionResult<Event> Post([FromBody]RegisterEventDto eventInfo)
+        // {
+        //     var entity = new Event
+        //     {
+        //         Id = Guid.NewGuid(),
+        //         Title = eventInfo.Title
+        //     };
+        //     _repository.Add(entity);
 
-            return CreatedAtAction("Get", new { id = entity.Id }, entity);
-        }
+        //     return CreatedAtAction("Get", new { id = entity.Id }, entity);
+        // }
 
         [HttpPost("{id}/RegisterMe")]
         public IActionResult RegisterMe(Guid id)

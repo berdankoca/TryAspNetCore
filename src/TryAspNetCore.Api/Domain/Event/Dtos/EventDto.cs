@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TryAspNetCore.Api.Domain
 {
-    public class RegisterEventDto
+    public class EventDto
     {
         [Required]
         [StringLength(40)]
