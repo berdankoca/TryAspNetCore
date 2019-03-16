@@ -1,3 +1,4 @@
+using System;
 using TryAspNetCore.Api.Core;
 using TryAspNetCore.Api.Core.Context;
 
@@ -11,6 +12,7 @@ namespace TryAspNetCore.Api.Core.Repositories
 
         void Update(T entity);
 
+        void Delete(Guid id);
         void Delete(T entity);
 
         void Save();

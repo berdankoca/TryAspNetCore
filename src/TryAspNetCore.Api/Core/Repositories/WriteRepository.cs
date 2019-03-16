@@ -1,3 +1,4 @@
+using System;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using TryAspNetCore.Api.Core;
@@ -33,6 +34,14 @@ namespace TryAspNetCore.Api.Core.Repositories
             }
         }
 
+        public virtual void Delete(Guid id)
+        {
+            var entity = Get(id);
+            if (entity == null)
+                return;
+
+            Delete(entity);
+        }
         public virtual void Delete(T entity)
         {
             Table.Remove(entity);
