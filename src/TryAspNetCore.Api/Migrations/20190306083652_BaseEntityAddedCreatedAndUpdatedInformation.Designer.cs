@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TryAspNetCore.Api.Core.Context;
@@ -9,9 +10,10 @@ using TryAspNetCore.Api.Core.Context;
 namespace TryAspNetCore.Api.Migrations
 {
     [DbContext(typeof(EventContext))]
-    partial class EventContextModelSnapshot : ModelSnapshot
+    [Migration("20190306083652_BaseEntityAddedCreatedAndUpdatedInformation")]
+    partial class BaseEntityAddedCreatedAndUpdatedInformation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,13 +29,13 @@ namespace TryAspNetCore.Api.Migrations
 
                     b.Property<Guid>("CreatedBy");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedTime");
 
                     b.Property<string>("Title");
 
-                    b.Property<Guid>("UpdatedBy");
+                    b.Property<Guid>("UpdadetBy");
 
-                    b.Property<DateTime>("UpdatedDate");
+                    b.Property<DateTime>("UpdatedTime");
 
                     b.HasKey("Id");
 
@@ -48,13 +50,13 @@ namespace TryAspNetCore.Api.Migrations
 
                     b.Property<Guid>("CreatedBy");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedTime");
 
                     b.Property<Guid>("EventId");
 
-                    b.Property<Guid>("UpdatedBy");
+                    b.Property<Guid>("UpdadetBy");
 
-                    b.Property<DateTime>("UpdatedDate");
+                    b.Property<DateTime>("UpdatedTime");
 
                     b.Property<Guid>("UserId");
 
