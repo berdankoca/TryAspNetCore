@@ -22,6 +22,8 @@ using Microsoft.IdentityModel.Tokens;
 using NSwag.AspNetCore;
 using TryAspNetCore.Api.Core.Repositories;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
+using Microsoft.AspNetCore.Http;
 
 namespace TryAspNetCore.Api
 {
@@ -37,15 +39,18 @@ namespace TryAspNetCore.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             // services.AddDbContext<BaseContext>(options =>
             //     options.UseNpgsql(Configuration.GetConnectionString("Default"))
             // );
             services.AddDbContext<EventContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("Default"))
+                options.UseLazyLoadingProxies()
+                    .UseNpgsql(Configuration.GetConnectionString("Default"))
             );
 
             services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<BaseContext>()
+                .AddEntityFrameworkStores<EventContext>()
                 .AddDefaultTokenProviders();
 
             services.AddJWtAuthentication(Configuration);
@@ -56,7 +61,13 @@ namespace TryAspNetCore.Api
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddAutoMapper();
+            // services.AddAutoMapper();
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddCollectionMappers();
+                // cfg.AllowNullCollections = true;
+                // cfg.AllowNullDestinationValues = true;
+            });
 
             services.AddMvc(options =>
                 {
@@ -64,7 +75,7 @@ namespace TryAspNetCore.Api
                     options.Filters.Add<ValidationFilter>();
                     options.Filters.Add<ResultWrapperFilter>();
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));

@@ -20,6 +20,6 @@ namespace TryAspNetCore.Api.Domain
         public string Title { get; set; }
 
         [ForeignKey("EventId")]
-        public ICollection<EventRegistration> Registrations { get; set; }
+        public virtual ICollection<EventRegistration> Registrations { get; set; }
     }
 }

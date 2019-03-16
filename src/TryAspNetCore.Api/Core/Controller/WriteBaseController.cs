@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TryAspNetCore.Api.Core;
@@ -9,9 +10,10 @@ using TryAspNetCore.Api.Core.Repositories;
 
 namespace TryAspNetCore.Core
 {
-    public abstract class WriteBaseController<TContext, T, TDto> : ReadBaseController<TContext, T>
+    public abstract class WriteBaseController<TContext, T, TDto> : ReadBaseController<TContext, T, TDto>
         where TContext : BaseContext
         where T : BaseEntity, new()
+        where TDto : BaseEntity, new()
     {
         private readonly IMapper _mapper;
         private readonly IWriteRepository<TContext, T> _writeRepository;
@@ -24,7 +26,7 @@ namespace TryAspNetCore.Core
         }
 
         [HttpPost]
-        public ActionResult<T> Post([FromBody]TDto record)
+        public ActionResult<TDto> Post([FromBody]TDto record)
         {
             _logger.LogInformation("Post log");
             var entity = _mapper.Map<T>(record);
@@ -32,6 +34,33 @@ namespace TryAspNetCore.Core
             _writeRepository.Add(entity);
 
             return CreatedAtAction("Get", new { id = entity.Id }, entity);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult<TDto> Put(Guid id, [FromBody]TDto record)
+        {
+            _logger.LogInformation("Put log");
+            var entity = _writeRepository.Get(id);
+            if (entity == null)
+                return NotFound();
+
+            _mapper.Map(record, entity);
+            _writeRepository.Update(entity);
+
+            return Ok(entity);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(Guid id)
+        {
+            _logger.LogInformation("Delete log");
+            var entity = _writeRepository.Get(id);
+            if (entity == null)
+                return NotFound();
+
+            _writeRepository.Delete(entity);
+
+            return Ok();
         }
     }
 }
