@@ -91,6 +91,15 @@ namespace TryAspNetCore.Api
 
             app.UseMiddleware<SerilogMiddleware>();
 
+            //TODO: It's not a good solution for migrate the db
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<EventContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
+
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
