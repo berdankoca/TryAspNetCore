@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using TryAspNetCore.Api.Core;
@@ -33,6 +34,15 @@ namespace TryAspNetCore.Api.Core.Repositories
                 Save();
             }
         }
+        public async void AddAsync(T enttiy)
+        {
+            await Task.FromResult(Table.Add(enttiy));
+
+            if (_autoSave)
+            {
+                await SaveAsync();
+            }
+        }
 
         public virtual void Delete(Guid id)
         {
@@ -42,12 +52,28 @@ namespace TryAspNetCore.Api.Core.Repositories
 
             Delete(entity);
         }
+        public async void DeleteAsync(Guid id)
+        {
+            var entity = await GetAsync(id);
+            if (entity == null)
+                return;
+
+            DeleteAsync(entity);
+        }
         public virtual void Delete(T entity)
         {
             Table.Remove(entity);
             if (_autoSave)
             {
                 Save();
+            }
+        }
+        public async void DeleteAsync(T entity)
+        {
+            await Task.FromResult(Table.Remove(entity));
+            if (_autoSave)
+            {
+                await SaveAsync();
             }
         }
 
@@ -59,14 +85,35 @@ namespace TryAspNetCore.Api.Core.Repositories
                 Save();
             }
         }
+        public async void UpdateAsync(T entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            if (_autoSave)
+            {
+                await SaveAsync();
+            }
+        }
 
-        public virtual void Save()
+        public virtual int Save()
         {
             using (var tran = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             {
-                _context.SaveChanges();
+                var result = _context.SaveChanges();
 
                 tran.Complete();
+
+                return result;
+            }
+        }
+        public async Task<int> SaveAsync()
+        {
+            using (var tran = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            {
+                var result = await _context.SaveChangesAsync();
+
+                tran.Complete();
+
+                return result;
             }
         }
     }

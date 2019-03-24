@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TryAspNetCore.Api.Core;
 using TryAspNetCore.Api.Core.Context;
@@ -31,28 +33,29 @@ namespace TryAspNetCore.Core
         }
 
         [HttpGet]
-        public ActionResult<PagedResult> Get([FromQuery]int start = 0, [FromQuery]int count = 20)
+        public async Task<ActionResult<PagedResult>> Get([FromQuery]int start = 0, [FromQuery]int count = 20)
         {
             _logger.LogInformation("Get log");
-            //We have to implement async pattern
-            var totalCount = _readRepository.FindBy(e => true).Count();
-            var entities = _readRepository.FindBy(e => true)
+            var totalCount = _readRepository.FindBy(e => true)
+                .CountAsync();
+            var entities = await _readRepository.FindBy(e => true)
                 .Skip(start)
-                .Take(count);
+                .Take(count)
+                .ToListAsync();
 
             var result = new PagedResult
             {
                 Items = _mapper.Map<List<TDto>>(entities),
-                TotalCount = totalCount
+                TotalCount = totalCount.Result
             };
             return new JsonResult(result);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<TDto> Get(Guid id)
+        public async Task<ActionResult<TDto>> Get(Guid id)
         {
             _logger.LogInformation("GetById log");
-            var entity = _readRepository.Get(id);
+            var entity = await _readRepository.GetAsync(id);
             if (entity == null)
                 return NotFound(null);
             var result = _mapper.Map<TDto>(entity);

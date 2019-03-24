@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TryAspNetCore.Api.Core;
 using TryAspNetCore.Api.Core.Context;
 
@@ -9,13 +10,18 @@ namespace TryAspNetCore.Api.Core.Repositories
         where T : BaseEntity, new()
     {
         void Add(T enttiy);
+        void AddAsync(T enttiy);
 
         void Update(T entity);
+        void UpdateAsync(T entity);
 
         void Delete(Guid id);
+        void DeleteAsync(Guid id);
         void Delete(T entity);
+        void DeleteAsync(T entity);
 
-        void Save();
+        int Save();
+        Task<int> SaveAsync();
 
     }
 }
