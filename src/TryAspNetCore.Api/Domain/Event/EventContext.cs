@@ -8,8 +8,8 @@ namespace TryAspNetCore.Api.Core.Context
 {
     public class EventContext : BaseContext
     {
-        public EventContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor)
-            : base(options, httpContextAccessor)
+        public EventContext(DbContextOptions options, ISessionManager sessionManager)
+            : base(options, sessionManager)
         {
 
         }

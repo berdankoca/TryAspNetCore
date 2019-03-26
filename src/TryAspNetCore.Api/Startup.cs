@@ -81,6 +81,9 @@ namespace TryAspNetCore.Api
             services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
             services.AddTransient(typeof(IWriteRepository<,>), typeof(WriteRepository<,>));
 
+            services.AddSingleton<IAmbientDataContext, AmbientDataContext>();
+            services.AddSingleton<ISessionManager, SessionManager>();
+
             services.AddSwaggerDocument();
         }
 
@@ -114,6 +117,7 @@ namespace TryAspNetCore.Api
             app.UseSwaggerUi3();
 
             app.UseAuthentication();
+            app.UseMiddleware<DefaultSessionMiddleware>();
             // app.UseHttpsRedirection();
 
             app.UseMvc();

@@ -10,12 +10,12 @@ namespace TryAspNetCore.Api.Core.Context
 {
     public abstract class BaseContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ISessionManager _sessionManager;
 
-        public BaseContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor)
+        public BaseContext(DbContextOptions options, ISessionManager sessionManager)
             : base(options)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _sessionManager = sessionManager;
         }
 
         public override int SaveChanges()
@@ -25,15 +25,10 @@ namespace TryAspNetCore.Api.Core.Context
             foreach (var item in changedEntries)
             {
                 var entity = item.Entity as BaseEntity;
-                //
-                var userId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
                 if (item.State == EntityState.Added)
-                {
-                    entity.CreatedBy = userId;
-                    entity.CreatedDate = DateTime.Now;
-                }
-                entity.UpdatedBy = userId;
-                entity.UpdatedDate = DateTime.Now;
+                    entity.SetCreatedInformation(_sessionManager);
+
+                entity.SetUpdatedInfirmation(_sessionManager);
             }
             var result = base.SaveChanges();
 
