@@ -18,11 +18,14 @@ namespace TryAspNetCore.Api.Core
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
-            var session = new DefaultSession
+            if (httpContext.User.Identity.IsAuthenticated)
             {
-                UserId = Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
-            };
-            _ambient.SetData(DefaultSession.ContextKey, session);
+                var session = new DefaultSession
+                {
+                    UserId = Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
+                };
+                _ambient.SetData(DefaultSession.ContextKey, session);
+            }
             await _next(httpContext);
         }
 
