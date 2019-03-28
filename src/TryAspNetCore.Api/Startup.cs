@@ -41,16 +41,16 @@ namespace TryAspNetCore.Api
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // services.AddDbContext<BaseContext>(options =>
-            //     options.UseNpgsql(Configuration.GetConnectionString("Default"))
-            // );
+            services.AddDbContext<IdentityContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("Default"))
+            );
             services.AddDbContext<EventContext>(options =>
                 options.UseLazyLoadingProxies()
                     .UseNpgsql(Configuration.GetConnectionString("Default"))
             );
 
             services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<EventContext>()
+                .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
 
             services.AddJWtAuthentication(Configuration);
