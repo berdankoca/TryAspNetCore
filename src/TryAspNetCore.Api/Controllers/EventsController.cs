@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
-using TryAspNetCore.Api.Core.Context;
-using TryAspNetCore.Api.Core;
-using TryAspNetCore.Api.Domain;
-using TryAspNetCore.Api.Core.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using TryAspNetCore.Core;
 using AutoMapper;
+using TryAspNetCore.Core;
+using TryAspNetCore.Api.Core;
+using TryAspNetCore.EventManagement;
+using TryAspNetCore.EntityFrameworkCore.Context;
+using TryAspNetCore.EntityFrameworkCore.Repository;
 
 namespace TryAspNetCore.Api.Controllers
 {

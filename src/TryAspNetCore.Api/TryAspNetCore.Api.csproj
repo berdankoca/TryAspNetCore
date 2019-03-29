@@ -22,4 +22,11 @@
     <PackageReference Include="Serilog.Sinks.Http" Version="5.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TryAspNetCore.Core\TryAspNetCore.Core.csproj" />
+    <ProjectReference Include="..\TryAspNetCore.EventManagement\TryAspNetCore.EventManagement.csproj" />
+    <ProjectReference Include="..\TryAspNetCore.Core.Web\TryAspNetCore.Core.Web.csproj" />
+    <ProjectReference Include="..\TryAspNetCore.IdentityManagement\TryAspNetCore.IdentityManagement.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -2,28 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using TryAspNetCore.Api.Core.Context;
-using TryAspNetCore.Api.Core;
-using TryAspNetCore.Api.Domain;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using NSwag.AspNetCore;
-using TryAspNetCore.Api.Core.Repositories;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Microsoft.AspNetCore.Http;
+using TryAspNetCore.Core;
+using TryAspNetCore.Core.Web;
+using TryAspNetCore.IdentityManagement;
+using TryAspNetCore.EventManagement;
+using TryAspNetCore.EntityFrameworkCore.Repository;
+using TryAspNetCore.Api.Core;
 
 namespace TryAspNetCore.Api
 {
@@ -42,11 +38,17 @@ namespace TryAspNetCore.Api
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDbContext<IdentityContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("Default"))
+                options.UseNpgsql(Configuration.GetConnectionString("Default"), npgsqlOptions =>
+                {
+                    npgsqlOptions.MigrationsAssembly("IdentitiyContext");
+                })
             );
             services.AddDbContext<EventContext>(options =>
                 options.UseLazyLoadingProxies()
-                    .UseNpgsql(Configuration.GetConnectionString("Default"))
+                    .UseNpgsql(Configuration.GetConnectionString("Default"), npgsqlOptions =>
+                    {
+                        npgsqlOptions.MigrationsAssembly("EventContext");
+                    })
             );
 
             services.AddIdentity<User, Role>()

@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using TryAspNetCore.Api.Core;
-using TryAspNetCore.Api.Domain;
+using TryAspNetCore.Core.Web;
+using TryAspNetCore.IdentityManagement;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 namespace TryAspNetCore.Api.Controllers
 {
@@ -45,7 +39,7 @@ namespace TryAspNetCore.Api.Controllers
             if (result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
-                var token = _jwtFactory.GenerateToken(appUser);
+                var token = _jwtFactory.GenerateToken(appUser.Id);
                 return Ok(new { Token = token });
 
             }
@@ -66,7 +60,7 @@ namespace TryAspNetCore.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                var token = _jwtFactory.GenerateToken(user);
+                var token = _jwtFactory.GenerateToken(user.Id);
 
                 return Ok(new { Token = token });
             }

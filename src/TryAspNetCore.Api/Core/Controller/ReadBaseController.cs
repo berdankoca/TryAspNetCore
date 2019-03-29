@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TryAspNetCore.Api.Core;
-using TryAspNetCore.Api.Core.Context;
-using TryAspNetCore.Api.Core.Repositories;
+using TryAspNetCore.Core;
+using TryAspNetCore.EntityFrameworkCore.Context;
+using TryAspNetCore.EntityFrameworkCore.Repository;
 
-namespace TryAspNetCore.Core
+namespace TryAspNetCore.Api.Core
 {
     [Authorize]
     [ApiController]
