@@ -83,8 +83,9 @@ namespace TryAspNetCore.Api
             services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
             services.AddTransient(typeof(IWriteRepository<,>), typeof(WriteRepository<,>));
 
-            services.AddSingleton<IAmbientDataContext, AmbientDataContext>();
-            services.AddSingleton<ISessionManager, SessionManager>();
+            services.ScanAssembliesAndRegister();
+            // services.AddSingleton<IAmbientDataContext, AmbientDataContext>();
+            // services.AddSingleton<ISessionManager, SessionManager>();
 
             services.AddSwaggerDocument();
         }
@@ -97,13 +98,13 @@ namespace TryAspNetCore.Api
             app.UseMiddleware<SerilogMiddleware>();
 
             //TODO: It's not a good solution for migrate the db
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<EventContext>())
-                {
-                    context.Database.Migrate();
-                }
-            }
+            // using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            // {
+            //     using (var context = serviceScope.ServiceProvider.GetService<EventContext>())
+            //     {
+            //         context.Database.Migrate();
+            //     }
+            // }
 
             if (env.IsDevelopment())
             {

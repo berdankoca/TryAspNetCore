@@ -5,7 +5,7 @@ namespace TryAspNetCore.Core
 {
     //https://codereview.stackexchange.com/questions/140694/ambient-context
     //This implementation is not necessary, I just the want to understand and try it
-    public class AmbientDataContext : IAmbientDataContext
+    public class AmbientDataContext : IAmbientDataContext, ISingletonDependency
     {
         private static readonly ConcurrentDictionary<string, AsyncLocal<object>> Instance = new ConcurrentDictionary<string, AsyncLocal<object>>();
 
