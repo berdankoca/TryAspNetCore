@@ -7,11 +7,51 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using TryAspNetCore.EntityFrameworkCore.Context;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using TryAspNetCore.Core.Web;
+using TryAspNetCore.EntityFrameworkCore.Repository;
+using TryAspNetCore.Core;
+using TryAspNetCore.Core.Dependency;
 
 namespace TryAspNetCore.Api.Core
 {
     public static class StartupExtension
     {
+        public static IServiceProvider RegisterAutofacImplementation(this IServiceCollection services)
+        {
+            var builder = new ContainerBuilder();
+
+            //Register all needed dependency
+
+            // builder.RegisterType<JwtFactory>()
+            //     .As<IJwtFactory>()
+            //     .SingleInstance();
+
+            builder.RegisterGeneric(typeof(ReadRepository<,>))
+                .As(typeof(IReadRepository<,>))
+                .InstancePerDependency();
+
+            builder.RegisterGeneric(typeof(WriteRepository<,>))
+                .As(typeof(IWriteRepository<,>))
+                .InstancePerDependency();
+
+            builder.RegisterModule(new TryAspNetCoreModule());
+
+            // services.AddSingleton<IJwtFactory, JwtFactory>();
+            // services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
+            // services.AddTransient(typeof(IWriteRepository<,>), typeof(WriteRepository<,>));
+
+            // services.ScanAssembliesAndRegister();
+            // services.AddSingleton<IAmbientDataContext, AmbientDataContext>();
+            // services.AddSingleton<ISessionManager, SessionManager>();
+
+            builder.Populate(services);
+            IContainer container = builder.Build();
+
+            return new AutofacServiceProvider(container);
+        }
+
         public static IServiceCollection AddJWtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>

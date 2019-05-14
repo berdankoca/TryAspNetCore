@@ -12,8 +12,8 @@ namespace TryAspNetCore.Api.Controllers
 {
     public class EventsController : WriteBaseController<EventContext, Event, EventDto>
     {
-        private readonly IWriteRepository<EventContext, Event> _repository;
-        public EventsController(IWriteRepository<EventContext, Event> repository, ILoggerFactory loggerFactory, IMapper mapper)
+        private readonly IEventRepository _repository;
+        public EventsController(IEventRepository repository, ILoggerFactory loggerFactory, IMapper mapper)
             : base(repository, loggerFactory, mapper)
         {
             _repository = repository;

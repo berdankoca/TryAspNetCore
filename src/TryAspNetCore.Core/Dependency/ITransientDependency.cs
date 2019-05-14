@@ -1,4 +1,7 @@
-public interface ITransientDependency
+namespace TryAspNetCore.Core.Dependency
 {
+    public interface ITransientDependency
+    {
 
+    }
 }

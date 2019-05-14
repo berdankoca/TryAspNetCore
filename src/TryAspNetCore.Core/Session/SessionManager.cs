@@ -1,6 +1,8 @@
+using TryAspNetCore.Core.Dependency;
+
 namespace TryAspNetCore.Core
 {
-    public class SessionManager : ISessionManager, IScopedDependency
+    public class SessionManager : ISessionManager, ISingletonDependency
     {
         private readonly IAmbientDataContext _ambient;
 

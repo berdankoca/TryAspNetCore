@@ -33,7 +33,7 @@ namespace TryAspNetCore.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -79,15 +79,17 @@ namespace TryAspNetCore.Api
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-            services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
-            services.AddTransient(typeof(IWriteRepository<,>), typeof(WriteRepository<,>));
+            // services.AddSingleton<IJwtFactory, JwtFactory>();
+            // services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
+            // services.AddTransient(typeof(IWriteRepository<,>), typeof(WriteRepository<,>));
 
-            services.ScanAssembliesAndRegister();
+            // services.ScanAssembliesAndRegister();
             // services.AddSingleton<IAmbientDataContext, AmbientDataContext>();
             // services.AddSingleton<ISessionManager, SessionManager>();
 
             services.AddSwaggerDocument();
+
+            return services.RegisterAutofacImplementation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

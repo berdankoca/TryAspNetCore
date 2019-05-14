@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Threading;
+using TryAspNetCore.Core.Dependency;
 
 namespace TryAspNetCore.Core
 {

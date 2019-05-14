@@ -1,4 +1,7 @@
-public interface IScopedDependency
+namespace TryAspNetCore.Core.Dependency
 {
+    public interface IScopedDependency
+    {
 
+    }
 }

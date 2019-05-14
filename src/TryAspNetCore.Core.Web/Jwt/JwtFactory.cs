@@ -5,10 +5,11 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using TryAspNetCore.Core.Dependency;
 
 namespace TryAspNetCore.Core.Web
 {
-    public class JwtFactory : IJwtFactory
+    public class JwtFactory : IJwtFactory, ISingletonDependency
     {
         private readonly IConfiguration _configuration;
         public JwtFactory(IConfiguration configuration)
