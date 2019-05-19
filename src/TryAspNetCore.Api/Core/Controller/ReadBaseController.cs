@@ -55,7 +55,7 @@ namespace TryAspNetCore.Api.Core
         public async Task<ActionResult<TDto>> Get(Guid id)
         {
             _logger.LogInformation("GetById log");
-            var entity = await _readRepository.GetAsync(id);
+            var entity = await _readRepository.GetByIdAsync(id);
             if (entity == null)
                 return NotFound(null);
             var result = _mapper.Map<TDto>(entity);

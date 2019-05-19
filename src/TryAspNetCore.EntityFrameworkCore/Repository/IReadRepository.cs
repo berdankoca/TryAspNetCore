@@ -12,8 +12,8 @@ namespace TryAspNetCore.EntityFrameworkCore.Repository
         where TContext : BaseContext
         where T : BaseEntity, new()
     {
-        T Get(Guid id);
-        Task<T> GetAsync(Guid id);
+        T GetById(Guid id);
+        Task<T> GetByIdAsync(Guid id);
 
         T GetBy(Expression<Func<T, bool>> expression);
         Task<T> GetByAsync(Expression<Func<T, bool>> expression);

@@ -40,7 +40,7 @@ namespace TryAspNetCore.Api.Core
         public ActionResult<TDto> Put(Guid id, [FromBody]TDto record)
         {
             _logger.LogInformation("Put log");
-            var entity = _writeRepository.Get(id);
+            var entity = _writeRepository.GetById(id);
             if (entity == null)
                 return NotFound();
 
@@ -54,7 +54,7 @@ namespace TryAspNetCore.Api.Core
         public ActionResult Delete(Guid id)
         {
             _logger.LogInformation("Delete log");
-            var entity = _writeRepository.Get(id);
+            var entity = _writeRepository.GetById(id);
             if (entity == null)
                 return NotFound();
 

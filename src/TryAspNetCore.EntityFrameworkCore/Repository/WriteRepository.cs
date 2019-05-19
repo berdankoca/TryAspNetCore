@@ -46,7 +46,7 @@ namespace TryAspNetCore.EntityFrameworkCore.Repository
 
         public virtual void Delete(Guid id)
         {
-            var entity = Get(id);
+            var entity = GetById(id);
             if (entity == null)
                 return;
 
@@ -54,7 +54,7 @@ namespace TryAspNetCore.EntityFrameworkCore.Repository
         }
         public async void DeleteAsync(Guid id)
         {
-            var entity = await GetAsync(id);
+            var entity = await GetByIdAsync(id);
             if (entity == null)
                 return;
 

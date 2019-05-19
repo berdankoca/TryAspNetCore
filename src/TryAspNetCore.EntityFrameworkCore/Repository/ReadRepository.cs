@@ -30,11 +30,11 @@ namespace TryAspNetCore.EntityFrameworkCore.Repository
             return await FindBy(expression).ToListAsync();
         }
 
-        public virtual T Get(Guid id)
+        public virtual T GetById(Guid id)
         {
             return FindBy(e => e.Id == id).SingleOrDefault();
         }
-        public async Task<T> GetAsync(Guid id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             return await FindBy(e => e.Id == id).SingleOrDefaultAsync();
         }
