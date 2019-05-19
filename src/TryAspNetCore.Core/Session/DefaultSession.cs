@@ -4,7 +4,7 @@ namespace TryAspNetCore.Core
 {
     public class DefaultSession
     {
-        public const string ContextKey = "TryAspNetCore.";
+        public const string ContextKey = "TryAspNetCore.DefaultSession";
 
         public Guid UserId { get; set; }
 
