@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TryAspNetCore.Core
 {
@@ -15,6 +17,7 @@ namespace TryAspNetCore.Core
 
         public DateTime UpdatedDate { get; private set; }
 
+
         public void SetCreatedInformation(ISessionManager _sessionManager)
         {
             CreatedBy = _sessionManager.Current.UserId; ;
@@ -26,5 +29,14 @@ namespace TryAspNetCore.Core
             UpdatedBy = _sessionManager.Current.UserId;
             UpdatedDate = DateTime.Now;
         }
+
+        private List<ValidationResult> _validationResults = new List<ValidationResult>();
+        public ICollection<ValidationResult> Validate()
+        {
+            Validator.TryValidateObject(this, new ValidationContext(this), _validationResults);
+
+            return _validationResults;
+        }
+
     }
 }
