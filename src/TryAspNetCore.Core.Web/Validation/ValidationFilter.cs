@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,10 +10,12 @@ namespace TryAspNetCore.Core.Web
         {
             if (!context.ModelState.IsValid)
             {
-                var exception = new CustomValidationException();
+                var exception = new CustomValidationException("Model properties is not valid!");
                 foreach (var state in context.ModelState)
-                    exception.ValidationErrors.Add(state.Key, state.Value.Errors.Select(e => e.ErrorMessage).ToArray());
-
+                {
+                    foreach (var error in state.Value.Errors)
+                        exception.ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
+                }
                 throw exception;
             }
         }

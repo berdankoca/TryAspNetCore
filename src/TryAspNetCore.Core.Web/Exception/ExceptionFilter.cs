@@ -27,14 +27,13 @@ namespace TryAspNetCore.Core.Web
                 Status = statusCode,
                 Error = new ErrorInformation(),
             };
-            if (context.Exception is CustomValidationException)
+            if (context.Exception is BaseException)
             {
                 statusCode = (int)HttpStatusCode.BadRequest;
-                result.Error.Title = "Request Validation Error";
-                foreach (var valError in (context.Exception as CustomValidationException).ValidationErrors)
+                result.Error.Title = context.Exception.Message ?? "Request Validation Error";
+                foreach (var validationError in (context.Exception as CustomValidationException).ValidationErrors)
                 {
-                    foreach (var error in valError.Value)
-                        result.Error.Messages.Add(error);
+                    result.Error.Messages.Add(validationError.ErrorMessage);
                 }
             }
             else
@@ -44,7 +43,7 @@ namespace TryAspNetCore.Core.Web
                 //, we can check the enviroment variable or configuration and add the stacktrace information
                 result.Error.Messages.Add(context.Exception.Message);
 
-                //TODO: Internal error, we have to add error to log system
+                //Internal error, we have to add error to log system
                 _logger.LogError(context.Exception, "Internal server error");
             }
 
