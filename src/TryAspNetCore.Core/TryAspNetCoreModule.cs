@@ -10,9 +10,25 @@ namespace TryAspNetCore.Core
     {
         protected override void AttachToComponentRegistration(Autofac.Core.IComponentRegistry componentRegistry, Autofac.Core.IComponentRegistration registration)
         {
+            base.AttachToComponentRegistration(componentRegistry, registration);
+
+            if (!registration.Activator.LimitType.ToString().StartsWith("TryAspNetCore"))
+                return;
+
+            // It will be good for the register interceptor
+            // componentRegistry.Registered += (sender, e) =>
+            // {
+            //     if (!e.ComponentRegistration.Activator.LimitType.ToString().StartsWith("TryAspNetCore"))
+            //         return;
+
+            //     Console.WriteLine($"Registered: { e.ComponentRegistration.Activator.LimitType.ToString() }");
+            // };
+
             // registration.Activating += (sender, e) =>
             // {
-            //     Console.WriteLine("Activating");
+            //     if (!e.Instance.GetType().ToString().StartsWith("TryAspNetCore"))
+            //         return;
+            //     Console.WriteLine($"Activating: { e.Instance.GetType().ToString() }");
             // };
 
             // registration.Activated += (sender, e) =>
@@ -20,13 +36,6 @@ namespace TryAspNetCore.Core
             //     Console.WriteLine("ACtivated");
             // };
 
-            //It will be good for the register interceptor
-            //componentRegistry.Registered += (sender, e) =>
-            //{
-            //    Console.WriteLine("Registered");
-            //};
-
-            base.AttachToComponentRegistration(componentRegistry, registration);
         }
         protected override void Load(ContainerBuilder builder)
         {
@@ -40,7 +49,8 @@ namespace TryAspNetCore.Core
                 .AssignableTo<ISingletonDependency>()
                 //Default behavior is implement itself(SessionManager), if we want to access via interface we add this line
                 .AsImplementedInterfaces()
-                .SingleInstance();
+                .SingleInstance()
+                .PropertiesAutowired();
             //.OnRegistered
             //OnActivating
 
@@ -48,13 +58,17 @@ namespace TryAspNetCore.Core
                 .Where(t => !t.IsGenericType)
                 .AssignableTo<IScopedDependency>()
                 .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+                .InstancePerLifetimeScope()
+                .PropertiesAutowired();
 
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => !t.IsGenericType)
                 .AssignableTo<ITransientDependency>()
                 .AsImplementedInterfaces()
-                .InstancePerDependency();
+                .InstancePerDependency()
+                .PropertiesAutowired();
+
+            // base.Load(builder);
         }
     }
 }

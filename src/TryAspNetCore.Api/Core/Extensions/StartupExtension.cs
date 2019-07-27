@@ -13,6 +13,8 @@ using TryAspNetCore.Core.Web;
 using TryAspNetCore.EntityFrameworkCore.Repository;
 using TryAspNetCore.Core;
 using TryAspNetCore.Core.Dependency;
+using Autofac.Core;
+using System.Diagnostics;
 
 namespace TryAspNetCore.Api.Core
 {
@@ -21,22 +23,24 @@ namespace TryAspNetCore.Api.Core
         public static IServiceProvider RegisterAutofacImplementation(this IServiceCollection services)
         {
             var builder = new ContainerBuilder();
+            builder.Populate(services);
 
             //Register all needed dependency
-
             // builder.RegisterType<JwtFactory>()
             //     .As<IJwtFactory>()
             //     .SingleInstance();
 
+            builder.RegisterModule(new TryAspNetCoreModule());
+
             builder.RegisterGeneric(typeof(ReadRepository<,>))
                 .As(typeof(IReadRepository<,>))
-                .InstancePerDependency();
+                .InstancePerDependency()
+                .PropertiesAutowired();
 
             builder.RegisterGeneric(typeof(WriteRepository<,>))
                 .As(typeof(IWriteRepository<,>))
-                .InstancePerDependency();
-
-            builder.RegisterModule(new TryAspNetCoreModule());
+                .InstancePerDependency()
+                .PropertiesAutowired();
 
             // services.AddSingleton<IJwtFactory, JwtFactory>();
             // services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
@@ -46,7 +50,6 @@ namespace TryAspNetCore.Api.Core
             // services.AddSingleton<IAmbientDataContext, AmbientDataContext>();
             // services.AddSingleton<ISessionManager, SessionManager>();
 
-            builder.Populate(services);
             IContainer container = builder.Build();
 
             return new AutofacServiceProvider(container);
