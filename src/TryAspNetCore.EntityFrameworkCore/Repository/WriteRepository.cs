@@ -4,6 +4,7 @@ using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using TryAspNetCore.Core;
 using TryAspNetCore.EntityFrameworkCore.Context;
+using TryAspNetCore.EntityFrameworkCore.Uow;
 
 namespace TryAspNetCore.EntityFrameworkCore.Repository
 {
@@ -18,12 +19,10 @@ namespace TryAspNetCore.EntityFrameworkCore.Repository
             set { _autoSave = value; }
         }
 
-        private readonly TContext _context;
-
-        public WriteRepository(TContext context)
-            : base(context)
+        public WriteRepository(IUnitOfWorkDbContextProvider<TContext> unitOfWorkDbContextProvider)
+            : base(unitOfWorkDbContextProvider)
         {
-            _context = context;
+
         }
 
         public virtual void Add(T entity)

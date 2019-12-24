@@ -77,7 +77,7 @@ namespace TryAspNetCore.Api
                     options.Filters.Add<ValidationFilter>();
                     options.Filters.Add<ResultWrapperFilter>();
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // services.AddSingleton<IJwtFactory, JwtFactory>();
             // services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));

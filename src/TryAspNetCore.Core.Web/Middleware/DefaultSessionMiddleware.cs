@@ -2,31 +2,39 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using TryAspNetCore.Core.Uow;
 
 namespace TryAspNetCore.Core.Web
 {
     public class DefaultSessionMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IAmbientDataContext _ambient;
 
-        public DefaultSessionMiddleware(RequestDelegate next, IAmbientDataContext ambient)
+        public DefaultSessionMiddleware(RequestDelegate next, IUnitOfWorkManager unitOfWorkManager, IAmbientDataContext ambient)
         {
             _next = next;
+            _unitOfWorkManager = unitOfWorkManager;
             _ambient = ambient;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
-            if (httpContext.User.Identity.IsAuthenticated)
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                var session = new DefaultSession
+                if (httpContext.User.Identity.IsAuthenticated)
                 {
-                    UserId = Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
-                };
-                _ambient.SetData(DefaultSession.ContextKey, session);
+                    var session = new DefaultSession
+                    {
+                        UserId = Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    };
+                    _ambient.SetData(DefaultSession.ContextKey, session);
+                }
+                await _next(httpContext);
+
+                await uow.CompleteAsync();
             }
-            await _next(httpContext);
         }
 
 

@@ -17,9 +17,9 @@ namespace TryAspNetCore.Api
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
             .AddEnvironmentVariables()
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{ Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production" }.json", optional: true)
             .Build();
         public static void Main(string[] args)
         {
@@ -36,12 +36,12 @@ namespace TryAspNetCore.Api
                 // .WriteTo.Console(
                 //     outputTemplate: "{Application} <{SourceContext}> {CorrelationId} {RequestId} [{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception} {Properties}"
                 // )
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://127.0.0.1:9200"))
-                {
-                    CustomFormatter = new ExceptionAsObjectJsonFormatter(renderMessage: true),
-                    TemplateName = "serilog-events-template",
-                    IndexFormat = "berdan-index-{0:yyyy.MM.dd}"
-                })
+                // .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://127.0.0.1:9200"))
+                // {
+                //     CustomFormatter = new ExceptionAsObjectJsonFormatter(renderMessage: true),
+                //     TemplateName = "serilog-events-template",
+                //     IndexFormat = "berdan-index-{0:yyyy.MM.dd}"
+                // })
                 // .ReadFrom.Configuration(Configuration)
                 .CreateLogger();
 

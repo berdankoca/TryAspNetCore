@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TryAspNetCore.Core;
 using TryAspNetCore.EntityFrameworkCore.Context;
+using TryAspNetCore.EntityFrameworkCore.Uow;
 
 namespace TryAspNetCore.EntityFrameworkCore.Repository
 {
@@ -13,12 +14,14 @@ namespace TryAspNetCore.EntityFrameworkCore.Repository
         where TContext : BaseContext
         where T : BaseEntity, new()
     {
-        private readonly TContext _context;
+        public virtual TContext _context => _unitOfWorkDbContextProvider.GetDbContext();
+        private readonly IUnitOfWorkDbContextProvider<TContext> _unitOfWorkDbContextProvider;
+
         public DbSet<T> Table => _context.Set<T>();
 
-        public ReadRepository(TContext context)
+        public ReadRepository(IUnitOfWorkDbContextProvider<TContext> unitOfWorkDbContextProvider)
         {
-            _context = context;
+            _unitOfWorkDbContextProvider = unitOfWorkDbContextProvider;
         }
 
         public virtual IQueryable<T> FindBy(Expression<Func<T, bool>> expression)

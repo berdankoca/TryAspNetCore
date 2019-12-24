@@ -15,6 +15,7 @@ using TryAspNetCore.Core;
 using TryAspNetCore.Core.Dependency;
 using Autofac.Core;
 using System.Diagnostics;
+using TryAspNetCore.EntityFrameworkCore.Uow;
 
 namespace TryAspNetCore.Api.Core
 {
@@ -41,6 +42,10 @@ namespace TryAspNetCore.Api.Core
                 .As(typeof(IWriteRepository<,>))
                 .InstancePerDependency()
                 .PropertiesAutowired();
+
+            builder.RegisterGeneric(typeof(UnitOfWorkDbContextProvider<>))
+                .As(typeof(IUnitOfWorkDbContextProvider<>))
+                .InstancePerDependency();
 
             // services.AddSingleton<IJwtFactory, JwtFactory>();
             // services.AddTransient(typeof(IReadRepository<,>), typeof(ReadRepository<,>));

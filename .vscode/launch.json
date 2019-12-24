@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/TryAspNetCore.Api/bin/Debug/netcoreapp2.1/TryAspNetCore.Api.dll",
+            "program": "${workspaceFolder}/src/TryAspNetCore.Api/bin/Debug/netcoreapp2.2/TryAspNetCore.Api.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/TryAspNetCore.Api",
             "stopAtEntry": false,

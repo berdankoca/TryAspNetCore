@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\TryAspNetCore.EntityFrameworkCore\TryAspNetCore.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\TryAspNetCore.Core\TryAspNetCore.Core.csproj" />
+    <ProjectReference Include="..\TryAspNetCore.Test.Core\TryAspNetCore.Test.Core.csproj" />
   </ItemGroup>
 
 </Project>
